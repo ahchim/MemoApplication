@@ -7,19 +7,19 @@
 
     <ImageButton
         android:src="@android:drawable/ic_menu_close_clear_cancel"
-        android:tint="@color/colorAccent"
+        android:tint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:background="@android:color/transparent"
-        android:layout_above="@+id/rtEditText"
+        android:layout_above="@+id/rte_toolbar_container"
         android:layout_toLeftOf="@+id/btnSave"
         android:layout_toStartOf="@+id/btnSave"
         android:id="@+id/btnCancle" />
 
     <ImageButton
         android:src="@android:drawable/ic_menu_save"
-        android:tint="@color/colorAccent"
+        android:tint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
@@ -29,13 +29,28 @@
         android:layout_alignParentEnd="true"
         android:id="@+id/btnSave" />
 
+    <include
+        android:id="@+id/rte_toolbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnSave"
+        layout="@layout/rte_toolbar" />
+
+    <com.onegravity.rteditor.RTEditText
+        android:id="@+id/rtEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rte_toolbar_container"
+        android:imeOptions="actionDone|flagNoEnterAction"
+        android:inputType="textMultiLine|textAutoCorrect|textCapSentences" />
+
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:hint="Input your memo"
         android:ems="10"
         android:layout_margin="10dp"
-        android:layout_below="@+id/btnSave"
+        android:layout_below="@id/rtEditText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/editText"

@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements ListInterface, Wr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setTheme(R.style.ThemeLight);
+        setTheme(R.style.RTE_ThemeLight);
 
         if(savedInstanceState == null) {
             setContentView(R.layout.activity_main);

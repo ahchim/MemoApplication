@@ -9,7 +9,7 @@
     <!-- android:tint로 이미지 색깔 변경가능 (이미지뷰, 이미지버튼 둘다가능) -->
     <ImageButton
         android:src="@android:drawable/ic_input_add"
-        android:tint="@color/colorAccent"
+        android:tint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
