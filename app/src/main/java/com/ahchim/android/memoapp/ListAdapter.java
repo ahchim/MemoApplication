@@ -1,14 +1,9 @@
 package com.ahchim.android.memoapp;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,8 +15,10 @@ import android.widget.TextView;
 
 import com.ahchim.android.memoapp.domain.Memo;
 import com.ahchim.android.memoapp.interfaces.ListInterface;
+import com.ahchim.android.memoapp.interfaces.RTInterface;
+import com.onegravity.rteditor.RTEditText;
 
-import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -31,6 +28,8 @@ import java.util.List;
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.Holder>{
     private ListInterface listInterface = null;
 
+    private RTInterface rtInterface;
+
     private List<Memo> datas;
     private Context context;
 
@@ -39,11 +38,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.Holder>{
         this.context = context;
         this.datas = datas;
         this.listInterface = (ListInterface) context;
+        this.rtInterface = (RTInterface) context;
     }
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_list_item, parent, false);
         Holder holder = new Holder(view);
 
         return holder;
@@ -52,18 +52,22 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.Holder>{
     @Override
     public void onBindViewHolder(Holder holder, int position) {
         final Memo memo = datas.get(position);
+        // 날짜 포멧 지정하기
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd h:mm a");
 
         // content를 한 줄 단위로 나눔
-        String[] contentSplit = memo.getContent().split("\\n");
+        String[] contentSplit = memo.getContent().split("<br/>");
         // content의 첫 한줄을 제목으로 지정함.
         String title = contentSplit[0];
 
-        holder.txtTitle.setText(title);
-        holder.txtDate.setText(memo.getEditdate() + "");
+        //holder.txtTitle.setText(Html.fromHtml(title));
+        holder.txtTitle.setRichTextEditing(true, title);
+        holder.txtDate.setText(formatter.format(memo.getEditdate()));
 
         // 첫줄 다음 줄을 미리보기 콘텐츠로 지정.
         if(contentSplit.length > 1){
-            holder.txtContent.setText(contentSplit[1]);
+            holder.txtContent.setRichTextEditing(true, contentSplit[1]);
+            //holder.txtContent.setText(Html.fromHtml(contentSplit[1]));
         }
 
         holder.position = position;
@@ -81,7 +85,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.Holder>{
     }
 
     public class Holder extends RecyclerView.ViewHolder {
-        TextView txtTitle, txtContent, txtDate;
+        RTEditText txtTitle, txtContent;
+        TextView txtDate;
         CardView cardView;
 
         int position;
@@ -89,8 +94,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.Holder>{
         public Holder(View view) {
             super(view);
 
-            this.txtTitle = (TextView) view.findViewById(R.id.txtTitle);
-            this.txtContent = (TextView) view.findViewById(R.id.txtContent);
+            this.txtTitle = (RTEditText) view.findViewById(R.id.txtTitle);
+            this.txtContent = (RTEditText) view.findViewById(R.id.txtContent);
+
+            rtInterface.getRTManager().registerEditor(txtTitle, true);
+            rtInterface.getRTManager().registerEditor(txtContent, true);
+
             this.txtDate = (TextView) view.findViewById(R.id.txtDate);
 
             this.cardView = (CardView) view.findViewById(R.id.cardView);

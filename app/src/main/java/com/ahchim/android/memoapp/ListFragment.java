@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,7 @@ public class ListFragment extends Fragment implements View.OnClickListener{
     private ListInterface listInterface = null;
 
     private ImageButton btnPlus;
+    public boolean btnPlusClicked = false;
 
     private List<Memo> datas = new ArrayList<>();
 
@@ -58,7 +58,7 @@ public class ListFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if(view == null) {
-            view = inflater.inflate(R.layout.layout_list, container, false);
+            view = inflater.inflate(R.layout.fragment_list, container, false);
 
             recyclerView = (RecyclerView) view.findViewById(R.id.list);
             if (mColumnCount <= 1) {
@@ -84,6 +84,7 @@ public class ListFragment extends Fragment implements View.OnClickListener{
                 // listInterface.goWrite(listAdapter.getItemCount()-1);
                 //} else{
                 // 메인의 goWrite 함수를 호출한다.
+                btnPlusClicked = true;
                 listInterface.goWrite();
                 //}
                 break;
