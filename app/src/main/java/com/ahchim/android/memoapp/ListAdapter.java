@@ -1,12 +1,17 @@
 package com.ahchim.android.memoapp;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -14,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.ahchim.android.memoapp.domain.Memo;
+import com.ahchim.android.memoapp.interfaces.ListInterface;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -23,12 +29,16 @@ import java.util.List;
  */
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.Holder>{
+    private ListInterface listInterface = null;
+
     private List<Memo> datas;
     private Context context;
+
 
     public ListAdapter(Context context, List<Memo> datas) {
         this.context = context;
         this.datas = datas;
+        this.listInterface = (ListInterface) context;
     }
 
     @Override
@@ -52,9 +62,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.Holder>{
         holder.txtDate.setText(memo.getEditdate() + "");
 
         // 첫줄 다음 줄을 미리보기 콘텐츠로 지정.
-        if(contentSplit.length>1){
+        if(contentSplit.length > 1){
             holder.txtContent.setText(contentSplit[1]);
         }
+
+        holder.position = position;
 
         // 첫줄을 제외한 나머지를 콘텐츠로 지정.
         //holder.txtContent.setText(memo.getContent().replaceAll(title + "\n", ""));
@@ -72,6 +84,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.Holder>{
         TextView txtTitle, txtContent, txtDate;
         CardView cardView;
 
+        int position;
+
         public Holder(View view) {
             super(view);
 
@@ -81,33 +95,64 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.Holder>{
 
             this.cardView = (CardView) view.findViewById(R.id.cardView);
 
-            this.cardView.setOnClickListener(listener);
+            this.txtTitle.setOnTouchListener(touchlistener);
+            this.txtContent.setOnTouchListener(touchlistener);
+            this.txtDate.setOnTouchListener(touchlistener);
+            this.cardView.setOnClickListener(clicklistener);
         }
 
-        View.OnClickListener listener = new View.OnClickListener() {
+        View.OnTouchListener touchlistener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mDetector.onTouchEvent(event);
+                return false;
+            }
+        };
+
+        View.OnClickListener clicklistener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WriteFragment writeFrag = WriteFragment.newInstance();
-                if(writeFrag != null){
-                    goWriteFrag(writeFrag);
+                // 메인의 goWrite 함수를 호출한다.
+                if(listInterface != null) {
+                    listInterface.goWrite(position);
                 }
             }
         };
 
-        private void goWriteFrag(WriteFragment writeFrag) {
-            if (context == null)
-                return;
-            if (context instanceof MainActivity) {
-                MainActivity mainAct = (MainActivity) context;
-
-                FragmentManager manager = mainAct.getSupportFragmentManager();
-                FragmentTransaction fragTrans = manager.beginTransaction();
-                fragTrans.add(R.id.activity_main, writeFrag);
-                //fragTrans.replace(R.id.activity_main, writeFrag);
-                fragTrans.addToBackStack(null);
-                fragTrans.commit();
+        GestureDetectorCompat mDetector = new GestureDetectorCompat(context, new GestureDetector.OnGestureListener() {
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return false;
             }
-        }
 
+            @Override
+            public void onShowPress(MotionEvent e) {
+
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                // 메인의 goWrite 함수를 호출한다.
+                if(listInterface != null) {
+                    listInterface.goWrite(position);
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                return false;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                return false;
+            }
+        });
     }
 }

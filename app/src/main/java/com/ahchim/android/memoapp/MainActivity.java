@@ -6,29 +6,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.ahchim.android.memoapp.Controller.DBController;
-import com.ahchim.android.memoapp.data.DBHelper;
+import com.ahchim.android.memoapp.controller.DBController;
 import com.ahchim.android.memoapp.domain.Memo;
 import com.ahchim.android.memoapp.interfaces.ListInterface;
 import com.ahchim.android.memoapp.interfaces.WriteInterface;
-import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements ListInterface, WriteInterface{
+public class MainActivity extends AppCompatActivity implements ListInterface, WriteInterface {
     ListFragment listFrag;
     WriteFragment writeFrag;
+
     FragmentManager manager;
 
-    DBController dataControl;
+    DBController dataControl = null;
 
     List<Memo> datas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //setTheme(R.style.ThemeLight);
 
         if(savedInstanceState == null) {
             setContentView(R.layout.activity_main);
@@ -63,6 +63,10 @@ public class MainActivity extends AppCompatActivity implements ListInterface, Wr
 
     @Override
     public void goWrite() {
+        Bundle bundle = new Bundle();
+        bundle.putString("editText", "");
+        writeFrag.setArguments(bundle);
+
         FragmentTransaction fragTrans = manager.beginTransaction();
         fragTrans.add(R.id.activity_main, writeFrag);
         fragTrans.addToBackStack(null);
@@ -71,7 +75,15 @@ public class MainActivity extends AppCompatActivity implements ListInterface, Wr
 
     @Override
     public void goWrite(int position) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("position", position);
+        bundle.putString("editText", datas.get(position).getContent());
+        writeFrag.setArguments(bundle);
 
+        FragmentTransaction fragTrans = manager.beginTransaction();
+        fragTrans.add(R.id.activity_main, writeFrag);
+        fragTrans.addToBackStack(null);
+        fragTrans.commit();
     }
 
     @Override
@@ -81,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements ListInterface, Wr
 
     @Override
     public void saveToList(Memo memo) throws SQLException {
+        dataControl = new DBController(this);
         dataControl.setData(memo);
 
         loadData();

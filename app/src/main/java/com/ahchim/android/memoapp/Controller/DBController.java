@@ -1,4 +1,4 @@
-package com.ahchim.android.memoapp.Controller;
+package com.ahchim.android.memoapp.controller;
 
 import android.content.Context;
 

@@ -3,6 +3,7 @@ package com.ahchim.android.memoapp;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,13 @@ import com.ahchim.android.memoapp.interfaces.WriteInterface;
 
 import java.sql.SQLException;
 
-
 public class WriteFragment extends Fragment implements View.OnClickListener {
     Context context = null;
     WriteInterface writeInterface = null;
     View view = null;
 
     int position = -1;
+    String editTextArgu = "";
 
     ImageButton btnSave;
     ImageButton btnCancle;
@@ -38,6 +39,10 @@ public class WriteFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            position = getArguments().getInt("position");
+            editTextArgu = getArguments().getString("editText");
+        }
     }
 
     @Override
@@ -53,6 +58,9 @@ public class WriteFragment extends Fragment implements View.OnClickListener {
 
             btnSave.setOnClickListener(this);
             btnCancle.setOnClickListener(this);
+
+            Log.i("Memo writeFrag","editTextargu============================================="+editTextArgu);
+            editText.setText(editTextArgu);
 
             return view;
         }
@@ -81,6 +89,12 @@ public class WriteFragment extends Fragment implements View.OnClickListener {
         super.onAttach(context);
         this.context = context;
         this.writeInterface = (WriteInterface) context;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        editText.setText(editTextArgu);
     }
 
 

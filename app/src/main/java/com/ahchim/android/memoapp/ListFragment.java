@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ public class ListFragment extends Fragment implements View.OnClickListener{
     private Context context;
 
     private RecyclerView recyclerView;
-    private ListAdapter listAdapter;
+    public ListAdapter listAdapter;
 
     private ListInterface listInterface = null;
 
@@ -33,8 +34,7 @@ public class ListFragment extends Fragment implements View.OnClickListener{
 
     private List<Memo> datas = new ArrayList<>();
 
-    public ListFragment() {
-    }
+    public ListFragment(){ }
 
     @SuppressWarnings("unused")
     public static ListFragment newInstance(int columnCount) {
@@ -80,8 +80,12 @@ public class ListFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btnPlus:
+                //if(listAdapter.getItemCount() > 0){
+                // listInterface.goWrite(listAdapter.getItemCount()-1);
+                //} else{
                 // 메인의 goWrite 함수를 호출한다.
                 listInterface.goWrite();
+                //}
                 break;
         }
     }

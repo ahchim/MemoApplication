@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/background_light"
     tools:context="com.ahchim.android.memoapp.WriteFragment">
 
     <ImageButton
@@ -9,7 +10,9 @@
         android:tint="@color/colorAccent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/editText"
+        android:padding="10dp"
+        android:background="@android:color/transparent"
+        android:layout_above="@+id/rtEditText"
         android:layout_toLeftOf="@+id/btnSave"
         android:layout_toStartOf="@+id/btnSave"
         android:id="@+id/btnCancle" />
@@ -19,6 +22,8 @@
         android:tint="@color/colorAccent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@android:color/transparent"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -29,6 +34,7 @@
         android:layout_height="match_parent"
         android:hint="Input your memo"
         android:ems="10"
+        android:layout_margin="10dp"
         android:layout_below="@+id/btnSave"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
